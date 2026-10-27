@@ -1,4 +1,4 @@
-name: Java CI/CD Pipeline
+name: Java CI/CD
 
 on:
   push:
@@ -9,23 +9,41 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Build Application
+      - uses: actions/checkout@v4
+      - name: Build
         run: echo "Building application"
 
-      - name: Test Application
-        run: echo "Running tests"
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: echo "Testing application"
 
-      - name: Code Quality Check
+  quality:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Quality
         run: echo "Checking code quality"
 
+  security:
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
       - name: Security Scan
         run: echo "Scanning security issues"
 
-      - name: Package Application
-        run: echo "Creating JAR/WAR file"
+  package:
+    needs: security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Package
+        run: echo "Packaging application"
 
-      - name: Deploy Application
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
         run: echo "Deploying application"
